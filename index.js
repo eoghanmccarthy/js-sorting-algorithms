@@ -78,3 +78,86 @@ export function insertionSort(arr) {
 
     return array;
 }
+
+// Merge Sort
+export function mergeSort(arr) {
+    // Base case: if array has 0 or 1 elements, it's already sorted
+    if (arr.length <= 1) {
+        return arr;
+    }
+
+    // Find middle point to divide array into two halves
+    // Bitwise right shift by 1 is equivalent to division by 2 but faster
+    const mid = arr.length >> 1;
+    // Split array into left and right halves
+    const left = arr.slice(0, mid);
+    const right = arr.slice(mid);
+
+    // None of the outer recursive functions can complete until their inner recursive calls are done.
+    // They all finish in rapid succession once the innermost recursion (the base case) is reached.
+    // This is why we don't need a result array - each recursive call returns its own sorted portion
+    // that gets merged up the chain
+
+    // Recursively sort both halves and combine them
+    return merge(mergeSort(left), mergeSort(right));
+}
+
+function merge(left, right) {
+    let result = [];
+    let leftIndex = 0;
+    let rightIndex = 0;
+
+    // Compare elements from both arrays and add smaller one to result
+    while (leftIndex < left.length && rightIndex < right.length) {
+        if (left[leftIndex] < right[rightIndex]) {
+            result.push(left[leftIndex]);
+            // Move to next element in left array
+            leftIndex++;
+        } else {
+            result.push(right[rightIndex]);
+            // Move to next element in right array
+            rightIndex++;
+        }
+    }
+
+    // Add any remaining elements from both arrays
+    // If one array is exhausted, concat adds remaining elements from the other
+    return result.concat(left.slice(leftIndex)).concat(right.slice(rightIndex));
+}
+
+// Quick Sort
+export function quickSort(arr) {
+    // Base case: if array has 1 or 0 elements, it's already sorted
+    if (arr.length <= 1) {
+        return arr;
+    }
+
+    // Choose a pivot element from middle of array
+    let pivot = arr[Math.floor(arr.length / 2)];
+    // Arrays to hold elements less than and greater than pivot
+    let left = [];
+    let right = [];
+
+    // Partition array around pivot
+    for (let i = 0; i < arr.length; i++) {
+        // Skip the pivot element itself
+        if (i !== Math.floor(arr.length / 2)) {
+            if (arr[i] < pivot) {
+                // Elements less than pivot go to left array
+                left.push(arr[i]);
+            } else {
+                // Elements greater than or equal go to right array
+                right.push(arr[i]);
+            }
+        }
+    }
+
+    // None of the outer recursive functions can complete until their inner recursive calls are done.
+    // They all finish in rapid succession once the innermost recursion (the base case) is reached.
+    // This is why we don't need a result array - each recursive call returns its own sorted portion
+    // that gets merged up the chain
+
+    // Recursively sort left and right arrays and combine with pivot
+    // The recursion won't return until all nested calls complete
+    return quickSort(left).concat(pivot, quickSort(right));
+}
