@@ -5,6 +5,17 @@ on:
     branches: [ main ]
   pull_request:
     branches: [ main ]
+  workflow_dispatch:
+    inputs:
+      test_type:
+        description: 'Type of test to run'
+        required: false
+        default: 'all'
+        type: choice
+        options:
+        - all
+        - performance
+        - basic
 
 jobs:
   test:
@@ -26,4 +37,7 @@ jobs:
       run: bun test tests/index.test.js
       
     - name: Display test results
-      run: echo "✅ All sorting algorithm tests completed!"
+      run: |
+        echo "✅ All sorting algorithm tests completed!"
+        echo "Test type: ${{ github.event.inputs.test_type || 'all' }}"
+        echo "Triggered by: ${{ github.event_name }}"
